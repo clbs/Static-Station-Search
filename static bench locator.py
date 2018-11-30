@@ -116,6 +116,12 @@ def highlight():
                     line = line.replace(item + "<" , newitem + "<")
                     p.write(line)
                     print("replaced: " + line)
+                elif simpname in line:
+                    print("before: " + line)
+                    line = line.replace(simpname + ".htm", simpname + "dump.htm")
+                    p.write(line)
+                elif "fnUpdateTabs();" in line:
+                    print("Ignoring breakout function.")
                 else:
                     p.write(line)
             p.close()
