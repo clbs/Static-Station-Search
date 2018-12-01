@@ -13,6 +13,38 @@ sheetlist = []
 stations = dict()
 itemlist = []
 sheetfound = []
+divinfo = dict()
+
+def getcolor(days):
+    x = int(days)
+    if x > 36:
+        color = ['85','247','7']
+        print("Integer: " + str(days) + " Color:" + str(color))
+        redhex = format(int(color[0]),'02x')
+        bluehex = format(int(color[1]),'02x')
+        greenhex = format(int(color[2]),'02x')
+        print("HEX COLOR:#" + str(redhex)+str(bluehex)+str(greenhex))
+    elif x < 36 and x > 5:
+        color = []
+        red = (260 - x * 5)
+        green = (x * 8 - 33)
+        blue = (7)
+        color.append(red)
+        color.append(green)
+        color.append(blue)
+        print("Integer: " + str(days) + " Color:" + str(color))
+        redhex = format(int(color[0]),'02x')
+        bluehex = format(int(color[1]),'02x')
+        greenhex = format(int(color[2]),'02x')
+        print("HEX COLOR:#" + str(redhex)+str(bluehex)+str(greenhex))
+    elif x < 5:
+        color = ['235','7','7']
+        print("Integer: " + str(days) + " Color:" + str(color))
+        redhex = format(int(color[0]),'02x')
+        bluehex = format(int(color[1]),'02x')
+        greenhex = format(int(color[2]),'02x')
+        print("HEX COLOR:#" + str(redhex)+str(bluehex)+str(greenhex))    
+    return("#" + str(redhex)+str(bluehex)+str(greenhex))
 
 def xmltofilelist(basepath,file):
     print("base path " + basepath)
@@ -103,6 +135,7 @@ def highlight():
         items = items.replace(".htm","dump.htm")
         sheetpathnew = (mainpath + "/" + simpname + "_files/" + items)
         print("Searching " +sheetpathfull+ " for stations, writing stations to " + sheetpathnew + ".")
+        divinf = ("")
         with open(sheetpathfull, "r+") as f, open(sheetpathnew, "w+") as p:
             for line in f:
                 if any(x in line for x in itemlist):
@@ -111,19 +144,32 @@ def highlight():
                             item = s
                     if oldsheet not in sheetfound:
                         sheetfound.append(oldsheet)
-                    print("original line: " + line)
-                    newitem = ("""<span style="background:#008822">""" + item + """</span>""")
-                    line = line.replace(item + "<" , newitem + "<")
-                    p.write(line)
-                    print("replaced: " + line)
+                    if item in stations:
+                        print("original line: " + line)
+                        color = getcolor(stations[item].days)
+                        newitem = ("""<span style="border: 1px solid black; padding: 5px; border-radius: 5px 5px 5px; background-size: 40px 40px; background:""" + color + """">""" + item + """</span>""")                        
+                        line = line.replace(item + "<" , newitem + "<")
+                        p.write(line)
+                        print("replaced: " + line)
+                        divinf = (divinf + item + " due " + str(stations[item].date) + " in " + stations[item].location + ". Due in " + str(stations[item].days) + " days. Station Type: " + stations[item].descrption + "<br/>") 
+                    else:
+                        print("original line: " + line)
+                        newitem = ("""<span style="border: 1px solid black; padding: 5px; border-radius: 5px 5px 5px; background-size: 40px 40px; background:#ff44bd">""" + item + """</span>""")
+                        line = line.replace(item + "<" , newitem + "<")
+                        p.write(line)
+                        print("replaced: " + line)
                 elif simpname in line:
                     print("before: " + line)
                     line = line.replace(simpname + ".htm", simpname + "dump.htm")
                     p.write(line)
                 elif "fnUpdateTabs();" in line:
                     print("Ignoring breakout function.")
+                elif "</body>" in line:
+                    line = ("""<div style="font-family: verdana, sans-serif; font-size: 11; line-height: 2.5; padding: 25px; z-index: 100; position: absolute; right: 300px; top: 100px; background-color: rgba(22, 66, 128, 0.4);  border-radius: 25px;">""" + divinf + """</div></body>""")
+                    p.write(line)
                 else:
                     p.write(line)
+            print(divinf)
             p.close()
             print("Items found on the following sheets: " + str(sheetfound))
 
