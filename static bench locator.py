@@ -336,7 +336,7 @@ class Statics:
         global simpname
         global sheetlist
         print("Select File.")
-        name = askopenfilename(initialdir="C:/Users/Batman/Documents/Programming/tkinter/",
+        name = askopenfilename(initialdir="C:/",
                 filetypes =(("Web Page", "*.htm"),("All Files","*.*")),
                 title = "Choose map file."
                 )
