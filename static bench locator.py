@@ -16,14 +16,17 @@ sheetfound = []
 divinfo = dict()
 
 def getcolor(days):
+    redhex = ""
+    greenhex = ""
+    bluehex = ""
     x = int(days)
-    if x > 36:
+    if x >= 36:
         color = ['85','247','7']
         print("Integer: " + str(days) + " Color:" + str(color))
         redhex = format(int(color[0]),'02x')
-        bluehex = format(int(color[1]),'02x')
-        greenhex = format(int(color[2]),'02x')
-        print("HEX COLOR:#" + str(redhex)+str(bluehex)+str(greenhex))
+        greenhex = format(int(color[1]),'02x')
+        bluehex = format(int(color[2]),'02x')
+        print("HEX COLOR:#" + str(redhex)+str(greenhex)+str(bluehex))
     elif x < 36 and x > 5:
         color = []
         red = (260 - x * 5)
@@ -34,17 +37,20 @@ def getcolor(days):
         color.append(blue)
         print("Integer: " + str(days) + " Color:" + str(color))
         redhex = format(int(color[0]),'02x')
-        bluehex = format(int(color[1]),'02x')
-        greenhex = format(int(color[2]),'02x')
-        print("HEX COLOR:#" + str(redhex)+str(bluehex)+str(greenhex))
-    elif x < 5:
+        greenhex = format(int(color[1]),'02x')
+        bluehex = format(int(color[2]),'02x')
+        print("redhex: " + str(redhex))
+        print("greenhex: " + str(greenhex))
+        print("bluehex: " + str(bluehex))
+        print("HEX COLOR:#" + str(redhex)+str(greenhex)+str(bluehex))
+    elif x <= 5:
         color = ['235','7','7']
         print("Integer: " + str(days) + " Color:" + str(color))
         redhex = format(int(color[0]),'02x')
         bluehex = format(int(color[1]),'02x')
         greenhex = format(int(color[2]),'02x')
-        print("HEX COLOR:#" + str(redhex)+str(bluehex)+str(greenhex))    
-    return("#" + str(redhex)+str(bluehex)+str(greenhex))
+        print("HEX COLOR:#" + str(redhex)+str(greenhex)+str(bluehex))    
+    return("#" + str(redhex)+str(greenhex)+str(bluehex))
 
 def xmltofilelist(basepath,file):
     print("base path " + basepath)
@@ -336,7 +342,7 @@ class Statics:
         global simpname
         global sheetlist
         print("Select File.")
-        name = askopenfilename(initialdir="C:/",
+        name = askopenfilename(initialdir="",
                 filetypes =(("Web Page", "*.htm"),("All Files","*.*")),
                 title = "Choose map file."
                 )
